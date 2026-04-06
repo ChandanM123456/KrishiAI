@@ -1565,12 +1565,12 @@ elif st.session_state.page == "results":
         
         # Load datasets
         try:
-            crop_data = pd.read_csv('crop_data.csv')
+            crop_data = pd.read_csv('AGRI-/crop_data.csv')
         except FileNotFoundError:
             st.error("Crop data file not found. Please ensure crop_data.csv exists.")
             crop_data = pd.DataFrame()
         try:
-            market_data = pd.read_csv('market_data.csv')
+            market_data = pd.read_csv('AGRI-/market_data.csv')
         except FileNotFoundError:
             market_data = pd.DataFrame()
         current_month = datetime.datetime.now().strftime('%B')
