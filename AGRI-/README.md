@@ -452,14 +452,14 @@ MIT License - see [LICENSE](LICENSE) for details
 
 **Developer:** Chandan M  
 **Project:** AGRI - Advanced Farmer Advisory System  
-**Repository:** [github.com/ChandanM123456/AGRI-](https://github.com/ChandanM123456/AGRI-)
+**Repository:** [github.com/ChandanM123456/AGRI-](https://github.com/ChandanM123456/KrishiAI-)
 
 ---
 
 ## 📞 Support
 
-- **Issues:** [GitHub Issues](https://github.com/ChandanM123456/AGRI-/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/ChandanM123456/AGRI-/discussions)
+- **Issues:** [GitHub Issues](https://github.com/ChandanM123456/KrishiAI-/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/ChandanM123456/KrishiAI-/discussions)
 
 ---
 
