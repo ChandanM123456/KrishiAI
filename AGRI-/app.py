@@ -1002,7 +1002,7 @@ def get_translated_text(text, lang_code):
 @st.cache_data
 def load_data():
     try:
-        csv_path = Path("crop-recommendation-dataset/Crop_recommendation.csv")
+        csv_path = Path("AGRI-/crop-recommendation-dataset/Crop_recommendation.csv")
         if csv_path.exists():
             return pd.read_csv(csv_path)
         else:
@@ -1735,12 +1735,12 @@ elif st.session_state.page == "results":
         
         # Load datasets
         try:
-            crop_data = pd.read_csv('crop_data.csv')
+            crop_data = pd.read_csv('AGRI-/crop_data.csv')
         except FileNotFoundError:
             st.error("Crop data file not found. Please ensure crop_data.csv exists.")
             crop_data = pd.DataFrame()
         try:
-            market_data = pd.read_csv('market_data.csv')
+            market_data = pd.read_csv('AGRI-/market_data.csv')
         except FileNotFoundError:
             market_data = pd.DataFrame()
         current_month = datetime.datetime.now().strftime('%B')
