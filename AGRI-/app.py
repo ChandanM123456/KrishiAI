@@ -15,8 +15,13 @@ from datetime import timedelta
 import base64
 import time
 from collections import defaultdict
-import tensorflow as tf
-from tensorflow import keras
+try:
+    import tensorflow as tf
+    from tensorflow import keras
+    TENSORFLOW_AVAILABLE = True
+except ImportError:
+    TENSORFLOW_AVAILABLE = False
+    print("Warning: TensorFlow not available. Some AI features will be disabled.")
 import os
 import warnings
 warnings.filterwarnings('ignore')
@@ -984,25 +989,25 @@ def load_trained_models():
     models = {}
     try:
         # Load Land Analysis CNN
-        if os.path.exists('models/land_analysis_cnn.h5'):
+        if TENSORFLOW_AVAILABLE and os.path.exists('models/land_analysis_cnn.h5'):
             models['land_analysis'] = keras.models.load_model('models/land_analysis_cnn.h5')
         else:
             st.warning(" Land Analysis CNN model not found")
         
         # Load Crop Recommendation Model
-        if os.path.exists('models/crop_recommendation_model.h5'):
+        if TENSORFLOW_AVAILABLE and os.path.exists('models/crop_recommendation_model.h5'):
             models['crop_recommendation'] = keras.models.load_model('models/crop_recommendation_model.h5')
         else:
             st.warning(" Crop Recommendation model not found")
         
         # Load Profit Prediction Model
-        if os.path.exists('models/profit_prediction_model.h5'):
+        if TENSORFLOW_AVAILABLE and os.path.exists('models/profit_prediction_model.h5'):
             models['profit_prediction'] = keras.models.load_model('models/profit_prediction_model.h5')
         else:
             st.warning(" Profit Prediction model not found")
         
         # Load Weather Optimization Model
-        if os.path.exists('models/weather_optimization_model.h5'):
+        if TENSORFLOW_AVAILABLE and os.path.exists('models/weather_optimization_model.h5'):
             models['weather_optimization'] = keras.models.load_model('models/weather_optimization_model.h5')
         else:
             st.warning(" Weather Optimization model not found")
