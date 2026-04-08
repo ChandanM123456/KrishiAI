@@ -710,6 +710,62 @@ def get_css(page):
             color: white;
         }
         """
+    
+    # Add CSS for specific pages
+    if page == "shopping":
+        return base_css + """
+        .stApp {
+            background: linear-gradient(135deg, #e0f2fe 0%, #c7d2fe 100%);
+            color: #1e3a8a;
+        }
+        h1, h2, h3 {
+            color: #1e3a8a;
+        }
+        .card, .metric-card, .task-item, .crop-card {
+            color: #1e3a8a;
+            background: rgba(255, 255, 255, 0.95);
+        }
+        .stButton button {
+            background: linear-gradient(45deg, #3b82f6, #2563eb);
+            color: white;
+        }
+        """
+    elif page == "marketing":
+        return base_css + """
+        .stApp {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            color: #1e3a8a;
+        }
+        h1, h2, h3 {
+            color: #1e3a8a;
+        }
+        .card, .metric-card, .task-item, .crop-card {
+            color: #1e3a8a;
+            background: rgba(255, 255, 255, 0.95);
+        }
+        .stButton button {
+            background: linear-gradient(45deg, #8b5cf6, #6366f1);
+            color: white;
+        }
+        """
+    elif page == "schedule":
+        return base_css + """
+        .stApp {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            color: #1e3a8a;
+        }
+        h1, h2, h3 {
+            color: #1e3a8a;
+        }
+        .card, .metric-card, .task-item, .crop-card {
+            color: #1e3a8a;
+            background: rgba(255, 255, 255, 0.95);
+        }
+        .stButton button {
+            background: linear-gradient(45deg, #f59e0b, #d97706);
+            color: white;
+        }
+        """
     return base_css
 
 # Initialize session state
