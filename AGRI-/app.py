@@ -376,26 +376,32 @@ def get_css(page):
         font-weight: 400;
     }
     
-    .price-trend strong {
-        color: #92400e !important;
+    /* Shopping and Marketing Section Text Colors */
+    .shopping-title {
+        color: #3b82f6 !important;
         font-weight: 600;
     }
     
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .main .block-container {
-            padding: 1rem;
-        }
-        
-        h1 {
-            font-size: 2rem;
-        }
-        
-        .card {
-            padding: 15px;
-            margin: 10px 0;
-        }
+    .marketing-title {
+        color: #3b82f6 !important;
+        font-weight: 600;
     }
+    
+    .section-header {
+        color: #2563eb !important;
+        font-weight: 600;
+    }
+    
+    .shopping-item-title {
+        color: #1e40af !important;
+        font-weight: 600;
+    }
+    
+    .marketing-item-title {
+        color: #1e40af !important;
+        font-weight: 600;
+    }
+        
     
     /* Task Items */
     .task-item {
@@ -2797,7 +2803,7 @@ elif st.session_state.page == "shopping":
         st.session_state.page = "results"
         st.rerun()
     
-    st.title("🛒 " + get_translated_text("shopping_requirements", st.session_state.language))
+    st.markdown('<h1 class="shopping-title">🛒 ' + get_translated_text("shopping_requirements", st.session_state.language) + '</h1>', unsafe_allow_html=True)
     
     if st.session_state.farming_plan:
         plan = st.session_state.farming_plan
@@ -2829,7 +2835,7 @@ elif st.session_state.page == "shopping":
             with st.container():
                 st.markdown(f"""
                 <div style="border: 2px solid #4CAF50; border-radius: 15px; padding: 20px; margin: 10px 0; background: linear-gradient(135deg, #f8fff8 0%, #e8f5e8 100%);">
-                    <h4 style="color: #2e7d32; margin-bottom: 15px;">🛍️ {category_translated}</h4>
+                    <h4 class="shopping-item-title" style="margin-bottom: 15px;">🛍️ {category_translated}</h4>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div>
                             <p style="font-weight: bold; color: #1b5e20; font-size: 16px;">{item['name']}</p>
@@ -3033,8 +3039,8 @@ elif st.session_state.page == "marketing":
         st.session_state.page = "schedule"
         st.rerun()
     
-    st.title("🏪 Marketing & Selling Options")
-    st.markdown("### 🌾 Sell Your Harvest for Maximum Profit!")
+    st.markdown('<h1 class="marketing-title">🏪 Marketing & Selling Options</h1>', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-header">🌾 Sell Your Harvest for Maximum Profit!</h2>', unsafe_allow_html=True)
     
     if st.session_state.farming_plan:
         crop = st.session_state.crop.lower()
@@ -3116,7 +3122,7 @@ elif st.session_state.page == "marketing":
             
             # Harvest Summary Card
             st.markdown("---")
-            st.markdown("### 📊 Harvest Summary")
+            st.markdown('<h2 class="section-header">📊 Harvest Summary</h2>', unsafe_allow_html=True)
             col1, col2, col3, col4 = st.columns(4)
             with col1:
                 st.markdown(f"""<div class="metric-card">
@@ -3141,7 +3147,7 @@ elif st.session_state.page == "marketing":
             
             # Market Overview Cards
             st.markdown("---")
-            st.markdown("### 🏪 Market Overview")
+            st.markdown('<h2 class="section-header">🏪 Market Overview</h2>', unsafe_allow_html=True)
             col1, col2, col3, col4 = st.columns(4)
             with col1:
                 st.markdown(f"""<div class="metric-card">
@@ -3166,12 +3172,12 @@ elif st.session_state.page == "marketing":
             
             # Comprehensive Selling Strategy
             st.markdown("---")
-            st.markdown("### 🎯 Selling Strategy")
-            st.markdown(f"**{prices['strategy']}**")
+            st.markdown('<h2 class="section-header">🎯 Selling Strategy</h2>', unsafe_allow_html=True)
+            st.markdown(f'<p class="marketing-item-title" style="font-weight: normal;">{prices["strategy"]}</p>', unsafe_allow_html=True)
             
             # Nearest Markets Section
             st.markdown("---")
-            st.markdown("### 📍 Nearest Agricultural Markets")
+            st.markdown('<h2 class="section-header">📍 Nearest Agricultural Markets</h2>', unsafe_allow_html=True)
             
             nearest_markets = get_nearest_markets(location)
             
