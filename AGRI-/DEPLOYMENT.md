@@ -27,18 +27,34 @@ streamlit deploy
 
 ### With TensorFlow AI Features
 
-**If you want full AI features in Streamlit Cloud:**
+**For Streamlit Cloud deployment with full AI features:**
 
-1. **Install TensorFlow locally first:**
+1. **Automatic TensorFlow Installation:**
 ```bash
-pip install tensorflow>=2.10.0 keras>=2.10.0
+# Deploy to Streamlit Cloud with TensorFlow (recommended)
+streamlit deploy --install tensorflow>=2.10.0 keras>=2.10.0
 ```
 
-2. **Then deploy with full requirements:**
+2. **Manual Installation Method:**
 ```bash
-# Copy full requirements to packages.txt
-cp requirements.txt packages.txt
+# Install TensorFlow first
+pip install tensorflow>=2.10.0 keras>=2.10.0
+
+# Then deploy with full requirements
 streamlit deploy
+```
+
+3. **Requirements File Method:**
+```bash
+# Use full requirements file with TensorFlow
+cp requirements-full.txt packages.txt
+streamlit deploy
+```
+
+4. **Direct Requirements Specification:**
+```bash
+# Deploy with inline TensorFlow requirements
+streamlit deploy --requirements "tensorflow>=2.10.0 keras>=2.10.0"
 ```
 
 ### Requirements Files
@@ -46,6 +62,7 @@ streamlit deploy
 - **`packages.txt`**: Core dependencies only (for Streamlit Cloud)
 - **`requirements.txt`**: All dependencies including TensorFlow (for local/full deployment)
 - **`requirements-cloud.txt`**: Cloud-specific without TensorFlow (alternative)
+- **`requirements-full.txt`**: Complete dependencies with TensorFlow (recommended for Streamlit Cloud)
 
 ### TensorFlow Handling
 
