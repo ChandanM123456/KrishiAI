@@ -1035,20 +1035,9 @@ def load_trained_models():
             try:
                 if os.path.exists('models/weather_optimization_model.h5'):
                     models['weather_optimization'] = keras.models.load_model('models/weather_optimization_model.h5')
-                    st.success("✅ Weather Optimization model loaded successfully")
-                else:
-                    st.warning("⚠️ Weather Optimization model not found")
-            except Exception as e:
-                st.error(f"❌ Error loading Weather Optimization model: {str(e)}")
-                st.info("🔧 Using basic weather recommendations")
-        else:
-            st.success("✅ Weather optimization features available with basic recommendations")
-            
     except Exception as e:
-        st.error(f"Error loading models: {e}")
+        st.error(f"❌ Error initializing ML models: {e}")
         return None
-    
-    return models
 
 # Crop classes for prediction
 CROP_CLASSES = ['Tomato', 'Onion', 'Chilli', 'Cabbage', 'Maize', 'Potato',
@@ -1754,7 +1743,6 @@ def load_data():
         if csv_path.exists():
             return pd.read_csv(csv_path)
         else:
-            st.success("✅ Using sample dataset for crop recommendations")
             return pd.DataFrame(columns=['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall', 'label'])
     except Exception as e:
         st.error(f"Error loading dataset: {e}")
