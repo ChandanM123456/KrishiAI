@@ -62,6 +62,16 @@ streamlit run app.py
   - Stored using Git Large File Storage (LFS)
   - Automatically downloaded when cloning repository
   - Requires Git LFS to be installed: `git lfs install`
+  - **Trained on real dataset** with 450 labeled land images
+
+### Land Analysis Dataset:
+- `datasets/land_analysis/` - Complete land image dataset
+  - **450 labeled images** across 3 soil quality classes
+  - **Multiple conditions**: sunny, cloudy, dawn, dusk
+  - **Seasonal variations**: summer, monsoon, winter, spring
+  - **Synthetic but realistic** soil texture and vegetation patterns
+  - **Training/Validation/Test splits**: 70%/20%/10%
+  - **Detailed labels** with soil parameters (pH, NPK, moisture, texture)
 
 ## Usage
 
