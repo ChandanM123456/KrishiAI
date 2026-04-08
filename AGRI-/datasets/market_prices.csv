@@ -1,0 +1,13 @@
+crop,market,min_price,max_price,avg_price,demand,season
+Tomato,Bangalore,25,45,32,Very High,Kharif
+Maize,Bellary,18,28,23,High,Kharif
+Ragi,Bangalore,30,45,38,Very High,Rabi
+Onion,Mysore,20,35,28,High,Rabi
+Potato,Bangalore,15,25,20,Medium,Kharif
+Chilli,Bangalore,35,55,45,High,Kharif
+Cabbage,Bangalore,8,15,11,Medium,Rabi
+Wheat,Bangalore,20,35,27,High,Rabi
+Cotton,Bellary,25,40,32,High,Kharif
+Rice,Bangalore,20,35,28,High,Kharif
+Groundnut,Bangalore,25,35,30,High,Rabi
+Sugarcane,Bellary,30,45,38,Very High,Kharif

@@ -975,52 +975,80 @@ if "page" not in st.session_state:
 st.markdown(f"<style>{get_css(st.session_state.page)}</style>", unsafe_allow_html=True)
 
 # ==================== MODEL LOADING ====================
-
 @st.cache_resource
 def load_trained_models():
     """Load all trained ML models"""
     models = {}
+    
+    # Check if models directory exists, create if not
+    models_dir = Path("models")
+    if not models_dir.exists():
+        models_dir.mkdir(exist_ok=True)
+        st.info(" Creating models directory...")
+    
     try:
         # Load Land Analysis Model
         if os.path.exists('models/land_analysis_simple.json'):
             with open('models/land_analysis_simple.json', 'r') as f:
                 import json
                 models['land_analysis'] = json.load(f)
-                st.success("✅ Land Analysis model loaded successfully")
+                st.success(" Land Analysis model loaded successfully")
         else:
-            st.warning(" Land Analysis model not found")
+            st.warning(" Land Analysis model not found - Creating simple model...")
+            # Create simple land analysis model if not exists
+            from models.land_analysis_model import SimpleLandAnalysisModel
+            simple_model = SimpleLandAnalysisModel()
+            simple_model.save_model()
+            models['land_analysis'] = simple_model.get_model_info()
+            st.success(" Simple land analysis model created and loaded")
         
         # Load Crop Recommendation Model
         if os.path.exists('models/crop_recommendation_simple.json'):
             with open('models/crop_recommendation_simple.json', 'r') as f:
                 import json
                 models['crop_recommendation'] = json.load(f)
-                st.success("✅ Crop Recommendation model loaded successfully")
+                st.success(" Crop Recommendation model loaded successfully")
         else:
-            st.warning(" Crop Recommendation model not found")
+            st.warning(" Crop Recommendation model not found - Creating simple model...")
+            # Create simple crop recommendation model if not exists
+            from models.crop_recommendation_model import SimpleCropRecommendationModel
+            simple_model = SimpleCropRecommendationModel()
+            simple_model.save_model()
+            models['crop_recommendation'] = simple_model.get_model_info()
+            st.success(" Simple crop recommendation model created and loaded")
         
         # Load Profit Prediction Model
         if os.path.exists('models/profit_prediction_simple.json'):
             with open('models/profit_prediction_simple.json', 'r') as f:
                 import json
                 models['profit_prediction'] = json.load(f)
-                st.success("✅ Profit Prediction model loaded successfully")
+                st.success(" Profit Prediction model loaded successfully")
         else:
-            st.warning(" Profit Prediction model not found")
+            st.warning(" Profit Prediction model not found - Creating simple model...")
+            # Create simple profit prediction model if not exists
+            from models.profit_prediction_model import SimpleProfitPredictionModel
+            simple_model = SimpleProfitPredictionModel()
+            simple_model.save_model()
+            models['profit_prediction'] = simple_model.get_model_info()
+            st.success(" Simple profit prediction model created and loaded")
         
         # Load Weather Optimization Model
         if os.path.exists('models/weather_optimization_simple.json'):
             with open('models/weather_optimization_simple.json', 'r') as f:
                 import json
                 models['weather_optimization'] = json.load(f)
-                st.success("✅ Weather Optimization model loaded successfully")
+                st.success(" Weather Optimization model loaded successfully")
         else:
-            st.warning(" Weather Optimization model not found")
+            st.warning(" Weather Optimization model not found - Creating simple model...")
+            # Create simple weather optimization model if not exists
+            from models.weather_optimization_model import SimpleWeatherOptimizationModel
+            simple_model = SimpleWeatherOptimizationModel()
+            simple_model.save_model()
+            models['weather_optimization'] = simple_model.get_model_info()
+            st.success(" Simple weather optimization model created and loaded")
             
     except Exception as e:
         st.error(f"Error loading models: {e}")
-        return None
-    
     return models
 
 # Crop classes for prediction

@@ -1,0 +1,13 @@
+location,temperature,rainfall,humidity,season,wind_speed
+Bangalore,28,120,60,Kharif,10
+Mysore,30,150,65,Kharif,12
+Bellary,32,100,55,Kharif,15
+Raichur,35,80,70,Kharif,8
+Bangalore,25,50,55,Rabi,8
+Mysore,26,40,60,Rabi,10
+Bellary,28,30,65,Rabi,12
+Raichur,30,25,70,Rabi,6
+Bangalore,22,200,70,Summer,5
+Mysore,24,180,75,Summer,6
+Bellary,26,150,70,Summer,8
+Raichur,28,120,72,Summer,4
