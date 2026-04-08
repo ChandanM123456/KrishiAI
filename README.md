@@ -28,10 +28,11 @@ An intelligent farming assistant that uses deep learning models to provide crop 
 
 ### Installation
 
-1. Clone the repository:
+1. Clone the repository with Git LFS:
 ```bash
 git clone https://github.com/ChandanM123456/KrishiAI.git
 cd KrishiAI/AGRI-
+git lfs install  # Install Git LFS for large model files
 ```
 
 2. Install dependencies:
@@ -56,10 +57,11 @@ streamlit run app.py
 - `models/profit_prediction_model.h5` (193 KB) - Profit predictions  
 - `models/weather_optimization_model.h5` (80 KB) - Weather optimization
 
-### Large Model (local only):
-- `models/land_analysis_cnn.h5` (309 MB) - Land analysis CNN
-  - Too large for GitHub, must be generated locally
-  - Run `train_model.py` to create this model
+### Large Model (via Git LFS):
+- `models/land_analysis_cnn.h5` (324 MB) - Land analysis CNN
+  - Stored using Git Large File Storage (LFS)
+  - Automatically downloaded when cloning repository
+  - Requires Git LFS to be installed: `git lfs install`
 
 ## Usage
 
@@ -119,4 +121,4 @@ For issues and questions:
 
 ---
 
-**Note**: The land analysis CNN model is too large for GitHub hosting. Run the training script locally to generate this model.
+**Note**: All models are now available in the repository. The land analysis CNN is stored using Git LFS for efficient handling of large files.
