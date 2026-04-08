@@ -1002,7 +1002,7 @@ def get_translated_text(text, lang_code):
 @st.cache_data
 def load_data():
     try:
-        csv_path = Path("AGRI-/crop-recommendation-dataset/Crop_recommendation.csv")
+        csv_path = Path("crop-recommendation-dataset/Crop_recommendation.csv")
         if csv_path.exists():
             return pd.read_csv(csv_path)
         else:
@@ -1735,12 +1735,12 @@ elif st.session_state.page == "results":
         
         # Load datasets
         try:
-            crop_data = pd.read_csv('AGRI-/crop_data.csv')
+            crop_data = pd.read_csv('crop_data.csv')
         except FileNotFoundError:
             st.error("Crop data file not found. Please ensure crop_data.csv exists.")
             crop_data = pd.DataFrame()
         try:
-            market_data = pd.read_csv('AGRI-/market_data.csv')
+            market_data = pd.read_csv('market_data.csv')
         except FileNotFoundError:
             market_data = pd.DataFrame()
         current_month = datetime.datetime.now().strftime('%B')
@@ -1811,38 +1811,51 @@ elif st.session_state.page == "results":
         # Crop cards
         for i, (crop_name, label) in enumerate(zip(crops, crop_labels)):
             with cols[i+1]:
-                crop_info = crop_data[crop_data['crop'].str.lower() == crop_name.lower()]
-                if not crop_info.empty:
-                    yield_per_acre = crop_info['yield_per_acre'].values[0]
-                    profit_per_acre = crop_info['profit'].values[0]
-                    budget_per_acre = crop_info['budget'].values[0]
+                if crop_data.empty or 'crop' not in crop_data.columns:
+                    # Use default values if crop_data is not available
+                    yield_per_acre = 5000
+                    profit_per_acre = 20000
+                    budget_per_acre = 30000
                     duration_days = CROP_DURATION.get(crop_name.lower(), 120)
+                else:
+                    crop_info = crop_data[crop_data['crop'].str.lower() == crop_name.lower()]
+                    if not crop_info.empty:
+                        yield_per_acre = crop_info['yield_per_acre'].values[0]
+                        profit_per_acre = crop_info['profit'].values[0]
+                        budget_per_acre = crop_info['budget'].values[0]
+                        duration_days = CROP_DURATION.get(crop_name.lower(), 120)
+                    else:
+                        # Use default values if crop not found
+                        yield_per_acre = 5000
+                        profit_per_acre = 20000
+                        budget_per_acre = 30000
+                        duration_days = CROP_DURATION.get(crop_name.lower(), 120)
                     
-                    total_yield = yield_per_acre * area
-                    total_profit = profit_per_acre * area
-                    total_investment = budget_per_acre * area
-                    
-                    yield_lower = total_yield * 0.85
-                    yield_upper = total_yield * 1.15
-                    selected_class = "crop-card selected" if crop_name.lower() == selected_crop.lower() else "crop-card"
-                    
-                    st.markdown(f"""
-                    <div class=\"{selected_class}\">
-                        <h3>{label}</h3>
-                        <h2>{crop_name.upper()}</h2>
-                        <p><strong>Duration:</strong> {duration_days} days</p>
-                        <p><strong>Total Yield:</strong> {total_yield:,.0f} kg<br>
-                        <small>({yield_lower:,.0f} - {yield_upper:,.0f} kg)</small></p>
-                        <p><strong>Total Investment:</strong> ₹{total_investment:,.0f}</p>
-                        <p><strong>Total Profit:</strong> ₹{total_profit:,.0f}</p>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    if st.button(f"Choose {label}", key=f"choose_{crop_name.lower()}"):
-                        st.session_state.selected_crop_result = crop_name
-                        st.session_state.crop = crop_name
-                        st.session_state.farming_plan['crop'] = crop_name
-                        selected_crop = crop_name
-                        st.rerun()
+                total_yield = yield_per_acre * area
+                total_profit = profit_per_acre * area
+                total_investment = budget_per_acre * area
+                
+                yield_lower = total_yield * 0.85
+                yield_upper = total_yield * 1.15
+                selected_class = "crop-card selected" if crop_name.lower() == selected_crop.lower() else "crop-card"
+                
+                st.markdown(f"""
+                <div class=\"{selected_class}\">
+                    <h3>{label}</h3>
+                    <h2>{crop_name.upper()}</h2>
+                    <p><strong>Duration:</strong> {duration_days} days</p>
+                    <p><strong>Total Yield:</strong> {total_yield:,.0f} kg<br>
+                    <small>({yield_lower:,.0f} - {yield_upper:,.0f} kg)</small></p>
+                    <p><strong>Total Investment:</strong> ₹{total_investment:,.0f}</p>
+                    <p><strong>Total Profit:</strong> ₹{total_profit:,.0f}</p>
+                </div>
+                """, unsafe_allow_html=True)
+                if st.button(f"Choose {label}", key=f"choose_{crop_name.lower()}"):
+                    st.session_state.selected_crop_result = crop_name
+                    st.session_state.crop = crop_name
+                    st.session_state.farming_plan['crop'] = crop_name
+                    selected_crop = crop_name
+                    st.rerun()
         
         st.markdown("---")
         st.markdown(f"**Selected Crop:** **{selected_crop.upper()}**")
