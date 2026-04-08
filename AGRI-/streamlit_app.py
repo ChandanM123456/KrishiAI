@@ -263,7 +263,7 @@ def main():
                 st.session_state.crop = "Tomato"
                 st.session_state.farming_plan = {"area": 2.5, "city": "Bangalore"}
                 st.success("✅ Land analyzed successfully!")
-                st.info("🍅 Recommended crop: Tomato for this region")
+                st.info("� Crop recommendation generated successfully!")
                 st.rerun()
     
     elif st.session_state.page == "results":
@@ -372,7 +372,7 @@ def main():
         st.markdown('<h1 class="marketing-title">💼 Selling Strategy</h1>', unsafe_allow_html=True)
         st.markdown('<p class="section-header">Advanced strategies for maximum profit</p>', unsafe_allow_html=True)
         
-        st.info("📋 Comprehensive selling strategies including market timing, storage recommendations, and value addition options")
+        st.info("📋 Advanced selling strategies and market insights available!")
     
     else:
         st.markdown('<h1 class="marketing-title">🏠 Welcome to KrishiAI Pro</h1>', unsafe_allow_html=True)
