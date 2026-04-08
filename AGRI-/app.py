@@ -981,27 +981,39 @@ def load_trained_models():
     """Load all trained ML models"""
     models = {}
     try:
-        # Load Land Analysis CNN
-        if os.path.exists('models/land_analysis_cnn.h5'):
-            models['land_analysis'] = keras.models.load_model('models/land_analysis_cnn.h5')
+        # Load Land Analysis Model
+        if os.path.exists('models/land_analysis_simple.json'):
+            with open('models/land_analysis_simple.json', 'r') as f:
+                import json
+                models['land_analysis'] = json.load(f)
+                st.success("✅ Land Analysis model loaded successfully")
         else:
-            st.warning(" Land Analysis CNN model not found")
+            st.warning(" Land Analysis model not found")
         
         # Load Crop Recommendation Model
-        if os.path.exists('models/crop_recommendation_model.h5'):
-            models['crop_recommendation'] = keras.models.load_model('models/crop_recommendation_model.h5')
+        if os.path.exists('models/crop_recommendation_simple.json'):
+            with open('models/crop_recommendation_simple.json', 'r') as f:
+                import json
+                models['crop_recommendation'] = json.load(f)
+                st.success("✅ Crop Recommendation model loaded successfully")
         else:
             st.warning(" Crop Recommendation model not found")
         
         # Load Profit Prediction Model
-        if os.path.exists('models/profit_prediction_model.h5'):
-            models['profit_prediction'] = keras.models.load_model('models/profit_prediction_model.h5')
+        if os.path.exists('models/profit_prediction_simple.json'):
+            with open('models/profit_prediction_simple.json', 'r') as f:
+                import json
+                models['profit_prediction'] = json.load(f)
+                st.success("✅ Profit Prediction model loaded successfully")
         else:
             st.warning(" Profit Prediction model not found")
         
         # Load Weather Optimization Model
-        if os.path.exists('models/weather_optimization_model.h5'):
-            models['weather_optimization'] = keras.models.load_model('models/weather_optimization_model.h5')
+        if os.path.exists('models/weather_optimization_simple.json'):
+            with open('models/weather_optimization_simple.json', 'r') as f:
+                import json
+                models['weather_optimization'] = json.load(f)
+                st.success("✅ Weather Optimization model loaded successfully")
         else:
             st.warning(" Weather Optimization model not found")
             
