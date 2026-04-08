@@ -989,28 +989,60 @@ def load_trained_models():
     models = {}
     try:
         # Load Land Analysis CNN
-        if TENSORFLOW_AVAILABLE and os.path.exists('models/land_analysis_cnn.h5'):
-            models['land_analysis'] = keras.models.load_model('models/land_analysis_cnn.h5')
+        if TENSORFLOW_AVAILABLE:
+            try:
+                if os.path.exists('models/land_analysis_cnn.h5'):
+                    models['land_analysis'] = keras.models.load_model('models/land_analysis_cnn.h5')
+                    st.success("✅ Land Analysis CNN model loaded successfully")
+                else:
+                    st.warning("⚠️ Land Analysis CNN model not found")
+            except Exception as e:
+                st.error(f"❌ Error loading Land Analysis model: {str(e)}")
+                st.info("🔧 Using fallback analysis methods")
         else:
-            st.warning(" Land Analysis CNN model not found")
+            st.info("🤖 TensorFlow not available - Land analysis features disabled")
         
         # Load Crop Recommendation Model
-        if TENSORFLOW_AVAILABLE and os.path.exists('models/crop_recommendation_model.h5'):
-            models['crop_recommendation'] = keras.models.load_model('models/crop_recommendation_model.h5')
+        if TENSORFLOW_AVAILABLE:
+            try:
+                if os.path.exists('models/crop_recommendation_model.h5'):
+                    models['crop_recommendation'] = keras.models.load_model('models/crop_recommendation_model.h5')
+                    st.success("✅ Crop Recommendation model loaded successfully")
+                else:
+                    st.warning("⚠️ Crop Recommendation model not found")
+            except Exception as e:
+                st.error(f"❌ Error loading Crop Recommendation model: {str(e)}")
+                st.info("🔧 Using fallback crop recommendations")
         else:
-            st.warning(" Crop Recommendation model not found")
+            st.info("🤖 TensorFlow not available - Crop recommendation features disabled")
         
         # Load Profit Prediction Model
-        if TENSORFLOW_AVAILABLE and os.path.exists('models/profit_prediction_model.h5'):
-            models['profit_prediction'] = keras.models.load_model('models/profit_prediction_model.h5')
+        if TENSORFLOW_AVAILABLE:
+            try:
+                if os.path.exists('models/profit_prediction_model.h5'):
+                    models['profit_prediction'] = keras.models.load_model('models/profit_prediction_model.h5')
+                    st.success("✅ Profit Prediction model loaded successfully")
+                else:
+                    st.warning("⚠️ Profit Prediction model not found")
+            except Exception as e:
+                st.error(f"❌ Error loading Profit Prediction model: {str(e)}")
+                st.info("🔧 Using basic profit calculations")
         else:
-            st.warning(" Profit Prediction model not found")
+            st.info("🤖 TensorFlow not available - Profit prediction features disabled")
         
         # Load Weather Optimization Model
-        if TENSORFLOW_AVAILABLE and os.path.exists('models/weather_optimization_model.h5'):
-            models['weather_optimization'] = keras.models.load_model('models/weather_optimization_model.h5')
+        if TENSORFLOW_AVAILABLE:
+            try:
+                if os.path.exists('models/weather_optimization_model.h5'):
+                    models['weather_optimization'] = keras.models.load_model('models/weather_optimization_model.h5')
+                    st.success("✅ Weather Optimization model loaded successfully")
+                else:
+                    st.warning("⚠️ Weather Optimization model not found")
+            except Exception as e:
+                st.error(f"❌ Error loading Weather Optimization model: {str(e)}")
+                st.info("🔧 Using basic weather recommendations")
         else:
-            st.warning(" Weather Optimization model not found")
+            st.info("🤖 TensorFlow not available - Weather optimization features disabled")
             
     except Exception as e:
         st.error(f"Error loading models: {e}")

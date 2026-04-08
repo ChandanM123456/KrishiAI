@@ -8,6 +8,7 @@ from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.metrics import accuracy_score, mean_squared_error
 import os
 import warnings
+from PIL import Image
 warnings.filterwarnings('ignore')
 
 print("🌾 Starting Model Training for KrishiAI...")
@@ -201,13 +202,59 @@ def train_land_analysis_model():
     """Train the Land Analysis CNN model"""
     print("\n🔍 Training Land Analysis CNN Model...")
     
+    # Check if dataset exists
+    dataset_path = "datasets/land_analysis"
+    if os.path.exists(dataset_path):
+        print(f"  📁 Using dataset from: {dataset_path}")
+        
+        # Load dataset
+        labels_file = os.path.join(dataset_path, "labels.csv")
+        if os.path.exists(labels_file):
+            labels_df = pd.read_csv(labels_file)
+            print(f"  📊 Loaded {len(labels_df)} labeled images")
+            
+            # Prepare training data
+            X_train = []
+            y_train = []
+            
+            # Load training images
+            train_labels = labels_df[labels_df['split'] == 'train']
+            for _, row in train_labels.iterrows():
+                img_path = os.path.join(dataset_path, "images", "train", row['soil_class'], row['filename'])
+                if os.path.exists(img_path):
+                    # Load and preprocess image
+                    img = Image.open(img_path)
+                    img = img.resize((224, 224))
+                    img_array = np.array(img) / 255.0
+                    X_train.append(img_array)
+                    
+                    # Convert soil class to numeric
+                    class_map = {'poor': 0, 'average': 1, 'good': 2}
+                    y_train.append(class_map[row['soil_class']])
+            
+            if len(X_train) == 0:
+                print("  ⚠️ No training images found, falling back to synthetic data")
+                use_synthetic = True
+            else:
+                print(f"  ✅ Loaded {len(X_train)} training images")
+                X_train = np.array(X_train)
+                y_train = keras.utils.to_categorical(y_train, num_classes=3)
+                use_synthetic = False
+        else:
+            print("  ⚠️ Labels file not found, using synthetic data")
+            use_synthetic = True
+    else:
+        print("  ⚠️ Dataset not found, using synthetic data")
+        use_synthetic = True
+    
+    # Use synthetic data if no real data available
+    if use_synthetic:
+        print("  📸 Generating synthetic land image data...")
+        X_train = np.random.rand(100, 224, 224, 3)  # 100 synthetic land images
+        y_train = keras.utils.to_categorical(np.random.randint(0, 3, 100), num_classes=3)  # 3 soil quality classes
+    
     # Create model
     model = LandAnalysisCNN()
-    
-    # Generate synthetic image data for training
-    print("  📸 Generating synthetic land image data...")
-    X_train = np.random.rand(100, 224, 224, 3)  # 100 synthetic land images
-    y_train = keras.utils.to_categorical(np.random.randint(0, 3, 100), num_classes=3)  # 3 soil quality classes
     
     # Train model
     print("  🏋️ Training model...")

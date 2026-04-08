@@ -1,0 +1,5 @@
+crop,soil_type,rainfall,temperature,suitability_score
+tomato,loamy,120,25,0.85
+maize,clay,100,28,0.78
+ragi,sandy,90,30,0.82
+okra,loamy,110,27,0.80
