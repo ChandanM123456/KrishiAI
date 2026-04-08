@@ -182,6 +182,7 @@ def create_requirements_file():
         "streamlit>=1.35.0",
         "pandas>=2.1.0",
         "numpy>=1.22.0",
+        "tensorflow>=2.12.0",
         "scikit-learn>=1.4.0",
         "Pillow>=9.0.0",
         "requests>=2.28.0",

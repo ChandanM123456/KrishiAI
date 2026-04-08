@@ -15,6 +15,8 @@ from datetime import timedelta
 import base64
 import time
 from collections import defaultdict
+import tensorflow as tf
+from tensorflow import keras
 import os
 import warnings
 warnings.filterwarnings('ignore')
@@ -975,67 +977,40 @@ if "page" not in st.session_state:
 st.markdown(f"<style>{get_css(st.session_state.page)}</style>", unsafe_allow_html=True)
 
 # ==================== MODEL LOADING ====================
+
 @st.cache_resource
 def load_trained_models():
     """Load all trained ML models"""
     models = {}
-    
-    # Check if models directory exists, create if not
-    models_dir = Path("models")
-    if not models_dir.exists():
-        models_dir.mkdir(exist_ok=True)
-    
     try:
-        # Load Land Analysis Model
-        if os.path.exists('models/land_analysis_simple.json'):
-            with open('models/land_analysis_simple.json', 'r') as f:
-                import json
-                models['land_analysis'] = json.load(f)
+        # Load Land Analysis CNN
+        if os.path.exists('models/land_analysis_cnn.h5'):
+            models['land_analysis'] = keras.models.load_model('models/land_analysis_cnn.h5')
         else:
-            # Create simple land analysis model if not exists
-            from models.land_analysis_model import SimpleLandAnalysisModel
-            simple_model = SimpleLandAnalysisModel()
-            simple_model.save_model()
-            models['land_analysis'] = simple_model.get_model_info()
+            st.warning(" Land Analysis CNN model not found")
         
         # Load Crop Recommendation Model
-        if os.path.exists('models/crop_recommendation_simple.json'):
-            with open('models/crop_recommendation_simple.json', 'r') as f:
-                import json
-                models['crop_recommendation'] = json.load(f)
+        if os.path.exists('models/crop_recommendation_model.h5'):
+            models['crop_recommendation'] = keras.models.load_model('models/crop_recommendation_model.h5')
         else:
-            # Create simple crop recommendation model if not exists
-            from models.crop_recommendation_model import SimpleCropRecommendationModel
-            simple_model = SimpleCropRecommendationModel()
-            simple_model.save_model()
-            models['crop_recommendation'] = simple_model.get_model_info()
+            st.warning(" Crop Recommendation model not found")
         
         # Load Profit Prediction Model
-        if os.path.exists('models/profit_prediction_simple.json'):
-            with open('models/profit_prediction_simple.json', 'r') as f:
-                import json
-                models['profit_prediction'] = json.load(f)
+        if os.path.exists('models/profit_prediction_model.h5'):
+            models['profit_prediction'] = keras.models.load_model('models/profit_prediction_model.h5')
         else:
-            # Create simple profit prediction model if not exists
-            from models.profit_prediction_model import SimpleProfitPredictionModel
-            simple_model = SimpleProfitPredictionModel()
-            simple_model.save_model()
-            models['profit_prediction'] = simple_model.get_model_info()
+            st.warning(" Profit Prediction model not found")
         
         # Load Weather Optimization Model
-        if os.path.exists('models/weather_optimization_simple.json'):
-            with open('models/weather_optimization_simple.json', 'r') as f:
-                import json
-                models['weather_optimization'] = json.load(f)
+        if os.path.exists('models/weather_optimization_model.h5'):
+            models['weather_optimization'] = keras.models.load_model('models/weather_optimization_model.h5')
         else:
-            # Create simple weather optimization model if not exists
-            from models.weather_optimization_model import SimpleWeatherOptimizationModel
-            simple_model = SimpleWeatherOptimizationModel()
-            simple_model.save_model()
-            models['weather_optimization'] = simple_model.get_model_info()
+            st.warning(" Weather Optimization model not found")
             
     except Exception as e:
         st.error(f"Error loading models: {e}")
+        return None
+    
     return models
 
 # Crop classes for prediction
@@ -1738,14 +1713,15 @@ def get_translated_text(text, lang_code):
 @st.cache_data
 def load_data():
     try:
-        csv_path = Path("datasets/crop_data.csv")
+        csv_path = Path("crop-recommendation-dataset/Crop_recommendation.csv")
         if csv_path.exists():
             return pd.read_csv(csv_path)
         else:
-            return pd.DataFrame(columns=['crop', 'soil_type', 'season', 'water_source', 'budget', 'profit_margin'])
+            st.warning("Dataset not found. Using default crop recommendations.")
+            return pd.DataFrame(columns=['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall', 'label'])
     except Exception as e:
         st.error(f"Error loading dataset: {e}")
-        return pd.DataFrame(columns=['crop', 'soil_type', 'season', 'water_source', 'budget', 'profit_margin'])
+        return pd.DataFrame(columns=['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall', 'label'])
 
 @st.cache_data
 def build_model():
