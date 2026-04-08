@@ -1750,7 +1750,7 @@ def get_translated_text(text, lang_code):
 @st.cache_data
 def load_data():
     try:
-        csv_path = Path("crop-recommendation-dataset/Crop_recommendation.csv")
+        csv_path = Path("datasets/crop_data.csv")
         if csv_path.exists():
             return pd.read_csv(csv_path)
         else:
