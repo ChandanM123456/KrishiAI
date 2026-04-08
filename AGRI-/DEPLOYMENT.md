@@ -10,6 +10,51 @@ KrishiAI Pro is an advanced AI-powered agricultural assistant that helps farmers
 - 📅 Farming schedule management
 - 🛒 Shopping recommendations and market locations
 
+## 🌐 Streamlit Cloud Deployment
+
+### Quick Start (Recommended)
+
+**For Streamlit Cloud deployment without TensorFlow dependencies:**
+
+```bash
+# Clone the repository
+git clone https://github.com/ChandanM123456/KrishiAI.git
+cd KrishiAI/AGRI-
+
+# Deploy to Streamlit Cloud (uses packages.txt by default)
+streamlit deploy
+```
+
+### With TensorFlow AI Features
+
+**If you want full AI features in Streamlit Cloud:**
+
+1. **Install TensorFlow locally first:**
+```bash
+pip install tensorflow>=2.10.0 keras>=2.10.0
+```
+
+2. **Then deploy with full requirements:**
+```bash
+# Copy full requirements to packages.txt
+cp requirements.txt packages.txt
+streamlit deploy
+```
+
+### Requirements Files
+
+- **`packages.txt`**: Core dependencies only (for Streamlit Cloud)
+- **`requirements.txt`**: All dependencies including TensorFlow (for local/full deployment)
+- **`requirements-cloud.txt`**: Cloud-specific without TensorFlow (alternative)
+
+### TensorFlow Handling
+
+The application gracefully handles TensorFlow absence:
+- ✅ **Core Features**: Shopping, marketing, calendar all work perfectly
+- ✅ **Beautiful Design**: Professional backgrounds and text colors
+- ✅ **No Crashes**: Graceful degradation when TensorFlow unavailable
+- ✅ **User Warnings**: Clear messages about disabled AI features
+
 ## 🐳 Docker Deployment
 
 ### Quick Start with Docker
