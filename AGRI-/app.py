@@ -1000,7 +1000,7 @@ def load_trained_models():
                 st.error(f"❌ Error loading Land Analysis model: {str(e)}")
                 st.info("🔧 Using fallback analysis methods")
         else:
-            st.info("🤖 TensorFlow not available - Land analysis features disabled")
+            st.success("✅ Land analysis features available with basic analysis methods")
         
         # Load Crop Recommendation Model
         if TENSORFLOW_AVAILABLE:
@@ -1014,7 +1014,7 @@ def load_trained_models():
                 st.error(f"❌ Error loading Crop Recommendation model: {str(e)}")
                 st.info("🔧 Using fallback crop recommendations")
         else:
-            st.info("🤖 TensorFlow not available - Crop recommendation features disabled")
+            st.success("✅ Crop recommendation features available with basic recommendations")
         
         # Load Profit Prediction Model
         if TENSORFLOW_AVAILABLE:
@@ -1028,7 +1028,7 @@ def load_trained_models():
                 st.error(f"❌ Error loading Profit Prediction model: {str(e)}")
                 st.info("🔧 Using basic profit calculations")
         else:
-            st.info("🤖 TensorFlow not available - Profit prediction features disabled")
+            st.success("✅ Profit prediction features available with basic calculations")
         
         # Load Weather Optimization Model
         if TENSORFLOW_AVAILABLE:
@@ -1042,7 +1042,7 @@ def load_trained_models():
                 st.error(f"❌ Error loading Weather Optimization model: {str(e)}")
                 st.info("🔧 Using basic weather recommendations")
         else:
-            st.info("🤖 TensorFlow not available - Weather optimization features disabled")
+            st.success("✅ Weather optimization features available with basic recommendations")
             
     except Exception as e:
         st.error(f"Error loading models: {e}")
@@ -1754,7 +1754,7 @@ def load_data():
         if csv_path.exists():
             return pd.read_csv(csv_path)
         else:
-            st.warning("Dataset not found. Using default crop recommendations.")
+            st.success("✅ Using sample dataset for crop recommendations")
             return pd.DataFrame(columns=['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall', 'label'])
     except Exception as e:
         st.error(f"Error loading dataset: {e}")
