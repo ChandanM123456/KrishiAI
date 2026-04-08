@@ -987,6 +987,11 @@ st.markdown(f"<style>{get_css(st.session_state.page)}</style>", unsafe_allow_htm
 def load_trained_models():
     """Load all trained ML models"""
     try:
+        # Import ML models
+        try:
+            from ml_models import KrishiAIModels
+        except ImportError:
+            KrishiAIModels = None
         ml_models = KrishiAIModels()
         return ml_models
     except Exception as e:
