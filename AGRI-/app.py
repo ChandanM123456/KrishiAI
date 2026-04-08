@@ -15,13 +15,6 @@ from datetime import timedelta
 import base64
 import time
 from collections import defaultdict
-try:
-    import tensorflow as tf
-    from tensorflow import keras
-    TENSORFLOW_AVAILABLE = True
-except ImportError:
-    TENSORFLOW_AVAILABLE = False
-    print("Warning: TensorFlow not available. Some AI features will be disabled.")
 import os
 import warnings
 warnings.filterwarnings('ignore')
@@ -982,50 +975,49 @@ if "page" not in st.session_state:
 st.markdown(f"<style>{get_css(st.session_state.page)}</style>", unsafe_allow_html=True)
 
 # ==================== MODEL LOADING ====================
-# Initialize ML models
+
 @st.cache_resource
 def load_trained_models():
     """Load all trained ML models"""
+    models = {}
     try:
-        # Import ML models
-        try:
-            from ml_models import KrishiAIModels
-        except ImportError:
-            KrishiAIModels = None
-        ml_models = KrishiAIModels()
-        return ml_models
+        # Load Land Analysis CNN
+        if os.path.exists('models/land_analysis_cnn.h5'):
+            models['land_analysis'] = keras.models.load_model('models/land_analysis_cnn.h5')
+        else:
+            st.warning(" Land Analysis CNN model not found")
+        
+        # Load Crop Recommendation Model
+        if os.path.exists('models/crop_recommendation_model.h5'):
+            models['crop_recommendation'] = keras.models.load_model('models/crop_recommendation_model.h5')
+        else:
+            st.warning(" Crop Recommendation model not found")
+        
+        # Load Profit Prediction Model
+        if os.path.exists('models/profit_prediction_model.h5'):
+            models['profit_prediction'] = keras.models.load_model('models/profit_prediction_model.h5')
+        else:
+            st.warning(" Profit Prediction model not found")
+        
+        # Load Weather Optimization Model
+        if os.path.exists('models/weather_optimization_model.h5'):
+            models['weather_optimization'] = keras.models.load_model('models/weather_optimization_model.h5')
+        else:
+            st.warning(" Weather Optimization model not found")
+            
     except Exception as e:
-        st.error(f"❌ Error initializing ML models: {e}")
+        st.error(f"Error loading models: {e}")
         return None
+    
+    return models
 
 # Crop classes for prediction
 CROP_CLASSES = ['Tomato', 'Onion', 'Chilli', 'Cabbage', 'Maize', 'Potato',
                 'Sugarcane', 'Cotton', 'Rice', 'Groundnut', 'Ragi', 'Wheat']
 
 def predict_crop_with_trained_model(models, soil_data, weather_data, budget, duration):
-    """Use trained ML models for crop recommendation with AI analysis"""
+    """Use trained crop recommendation model for prediction"""
     try:
-        if hasattr(models, 'recommend_crop'):
-            # Use our advanced ML models
-            N = soil_data.get('soil_health', 50)
-            P = 35
-            K = 40
-            temperature = weather_data.get('temp', 25)
-            humidity = weather_data.get('humidity', 60)
-            rainfall = weather_data.get('rainfall', 100)
-            ph = soil_data.get('ph', 6.5)
-            
-            # Get ML recommendations with confidence scores
-            recommendations = models.recommend_crop(N, P, K, temperature, humidity, rainfall, ph)
-            
-            if recommendations:
-                # Format results like old model
-                results = []
-                for rec in recommendations:
-                    results.append((rec['crop'], float(rec['confidence'].rstrip('%'))/100))
-                return results
-        
-        # Fallback to old model logic
         if 'crop_recommendation' not in models:
             return None
         
@@ -1047,91 +1039,48 @@ def predict_crop_with_trained_model(models, soil_data, weather_data, budget, dur
         st.error(f"Error in crop prediction: {e}")
         return None
 
-def predict_profit_with_trained_model(trained_models, crop_type, duration, budget, location, demand):
-    """Use trained ML models for profit prediction with AI analysis"""
+def predict_profit_with_trained_model(models, crop_type, duration, budget, location, demand):
+    """Use trained profit prediction model for prediction"""
     try:
-        if hasattr(trained_models, 'predict_profit'):
-            # Use our advanced ML models
-            prediction = trained_models.predict_profit(crop_type, duration, budget, location, demand)
-            
-            if prediction:
-                # Show AI analysis insights
-                st.info(f"🤖 AI Analysis: {prediction['ml_insights']}")
-                st.success(f"📊 Predicted Profit: ₹{prediction['predicted_profit']:,.0f} (Confidence: {prediction['confidence']})")
-                
-                # Show recommendations
-                if prediction['recommendations']:
-                    st.markdown("### 💡 AI Recommendations:")
-                    for rec in prediction['recommendations']:
-                        st.markdown(f"• {rec}")
-                
-                return {
-                    'predicted_profit': prediction['predicted_profit'],
-                    'confidence': prediction['confidence'],
-                    'recommendations': prediction['recommendations'],
-                    'ml_insights': prediction['ml_insights']
-                }
+        if 'profit_prediction' not in models:
+            return None
         
-        # Fallback to old model logic
-        if 'profit_prediction' in trained_models:
-            model = trained_models['profit_prediction']
-            # Prepare input features (8 features as expected by model)
-            crop_encoded = CROP_CLASSES.index(crop_type) if crop_type in CROP_CLASSES else 0
-            features = np.array([[crop_encoded, duration, budget, 1.0, 1.0, 5000, 0.5, 0.5]])
-            
-            # Make prediction
-            prediction = model.predict(features)[0]
-            
-            return {
-                'predicted_profit': float(prediction),
-                'confidence': '85%',
-                'recommendations': ['Optimize fertilizer usage', 'Consider market timing'],
-                'ml_insights': f"Traditional ML model analyzed profit potential"
-            }
+        model = models['profit_prediction']
+        
+        # Prepare input features (8 features as expected by model)
+        # crop_encoded, duration, budget, location_encoded, demand_encoded, yield_per_acre + 2 synthetic features
+        crop_encoded = CROP_CLASSES.index(crop_type) if crop_type in CROP_CLASSES else 0
+        features = np.array([[crop_encoded, duration, budget, 1.0, 1.0, 5000, 0.5, 0.5]])
+        
+        # Make prediction
+        prediction = model.predict(features)[0]
+        
+        return float(prediction[0])
         
     except Exception as e:
         st.error(f"Error in profit prediction: {e}")
         return None
 
-def analyze_land_with_trained_model(trained_models, image):
-    """Use trained ML models for land analysis with AI insights"""
+def analyze_land_with_trained_model(models, image):
+    """Use trained land analysis CNN for soil quality prediction"""
     try:
-        if hasattr(trained_models, 'optimize_farming_conditions'):
-            # Use our advanced ML models
-            prediction = trained_models.optimize_farming_conditions(25, 60, 100, 10, 50, 1)
-            
-            if prediction:
-                # Show AI analysis insights
-                st.info(f"🤖 AI Analysis: Farming conditions optimized with {prediction['farming_score']:.1%} score")
-                st.success(f"🌱 Soil Quality Analysis Complete (Confidence: {prediction.get('confidence', 'High')})")
-                
-                # Show recommendations
-                if prediction.get('recommendations'):
-                    st.markdown("### 💡 AI Farming Recommendations:")
-                    for rec in prediction['recommendations']:
-                        st.markdown(f"• {rec}")
-                
-                return prediction['farming_score'], prediction.get('confidence', 'High')
+        if 'land_analysis' not in models:
+            return None
         
-        # Fallback to old model logic
-        if 'land_analysis' in trained_models:
-            model = trained_models['land_analysis']
-            
-            # Preprocess image to (224, 224, 3)
-            img = image.resize((224, 224))
-            img_array = np.array(img) / 255.0
-            img_array = np.expand_dims(img_array, axis=0)
-            
-            # Make prediction
-            prediction = model.predict(img_array)[0]
-            soil_classes = ['Poor', 'Average', 'Good']
-            predicted_class = soil_classes[np.argmax(prediction)]
-            confidence = float(np.max(prediction))
-            
-            st.info(f"🤖 AI Analysis: Land quality analyzed with {confidence:.1%} confidence")
-            st.success(f"🌱 Predicted Soil Quality: {predicted_class}")
-            
-            return predicted_class, confidence
+        model = models['land_analysis']
+        
+        # Preprocess image to (224, 224, 3)
+        img = image.resize((224, 224))
+        img_array = np.array(img) / 255.0
+        img_array = np.expand_dims(img_array, axis=0)
+        
+        # Make prediction
+        prediction = model.predict(img_array)[0]
+        soil_classes = ['Poor', 'Average', 'Good']
+        predicted_class = soil_classes[np.argmax(prediction)]
+        confidence = float(np.max(prediction))
+        
+        return predicted_class, confidence
         
     except Exception as e:
         st.error(f"Error in land analysis: {e}")
@@ -1762,10 +1711,11 @@ def get_translated_text(text, lang_code):
 @st.cache_data
 def load_data():
     try:
-        csv_path = Path("datasets/crop_data.csv")
+        csv_path = Path("crop-recommendation-dataset/Crop_recommendation.csv")
         if csv_path.exists():
             return pd.read_csv(csv_path)
         else:
+            st.warning("Dataset not found. Using default crop recommendations.")
             return pd.DataFrame(columns=['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall', 'label'])
     except Exception as e:
         st.error(f"Error loading dataset: {e}")
@@ -2677,7 +2627,7 @@ elif st.session_state.page == "upload":
                     N = nitrogen
                     
                     # Use trained models if available, otherwise fallback to RandomForest
-                    if trained_models and hasattr(trained_models, 'recommend_crop'):
+                    if trained_models and 'crop_recommendation' in trained_models:
                         # Use our trained crop recommendation model
                         crop_predictions = predict_crop_with_trained_model(
                             trained_models, 
