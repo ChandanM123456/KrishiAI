@@ -9,20 +9,59 @@ from PIL import Image
 import io
 import base64
 
-# Import all functions from main app
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# Import essential functions for cloud deployment
+def get_translated_text(key, language):
+    """Simple translation function for cloud deployment"""
+    translations = {
+        'english': {
+            'dashboard': 'Dashboard',
+            'upload': 'Upload Land',
+            'results': 'Crop Recommendations',
+            'schedule': 'Farming Schedule',
+            'shopping': 'Shopping Requirements',
+            'marketing': 'Marketing & Selling',
+            'market': 'Market Insights',
+            'selling_strategy': 'Selling Strategy',
+            'government_subsidy': 'Government Subsidies',
+            'profile': 'Profile'
+        }
+    }
+    return translations.get(language, {}).get(key, key)
 
-# Import main app functions
-from app import (
-    get_translated_text, get_weather_data, get_crop_recommendations,
-    get_shopping_requirements, get_nearest_markets, get_marketing_insights,
-    get_selling_strategies, get_price_forecast, get_optimal_selling_locations,
-    get_risk_management_strategies, get_land_analysis, predict_crop_yield,
-    predict_profit, get_farming_schedule, get_market_intelligence,
-    get_farming_tasks, get_government_schemes, get_agri_news
-)
+def get_mock_weather_data():
+    """Mock weather data for cloud deployment"""
+    return {
+        'temperature': 28,
+        'humidity': 65,
+        'rainfall': 120,
+        'forecast': 'Sunny conditions expected'
+    }
+
+def get_mock_crop_recommendations():
+    """Mock crop recommendations for cloud deployment"""
+    return [
+        {'name': 'Tomato', 'yield': '25-35 q/ha', 'profit': '₹50k-₹80k'},
+        {'name': 'Maize', 'yield': '20-30 q/ha', 'profit': '₹40k-₹60k'},
+        {'name': 'Ragi', 'yield': '8-12 q/ha', 'profit': '₹30k-₹45k'},
+        {'name': 'Okra', 'yield': '15-25 q/ha', 'profit': '₹35k-₹55k'}
+    ]
+
+def get_mock_shopping_requirements(crop, area):
+    """Mock shopping requirements for cloud deployment"""
+    return {
+        'seeds': {'name': f'{crop} Seeds', 'quantity': f'{area * 2} kg', 'price': 500},
+        'fertilizer': {'name': 'NPK Fertilizer', 'quantity': f'{area * 3} bags', 'price': 1500},
+        'tools': {'name': 'Farming Tools', 'quantity': '1 set', 'price': 2000}
+    }
+
+def get_mock_market_prices():
+    """Mock market prices for cloud deployment"""
+    return {
+        'Tomato': {'min': 20, 'max': 35, 'avg': 28, 'demand': 'High'},
+        'Maize': {'min': 18, 'max': 25, 'avg': 22, 'demand': 'Medium'},
+        'Ragi': {'min': 25, 'max': 40, 'avg': 33, 'demand': 'High'},
+        'Okra': {'min': 30, 'max': 45, 'avg': 38, 'demand': 'High'}
+    }
 
 # Initialize session state
 if 'page' not in st.session_state:
@@ -230,23 +269,15 @@ def main():
     elif st.session_state.page == "results":
         st.markdown('<h1 class="marketing-title">🌱 Crop Recommendations</h1>', unsafe_allow_html=True)
         
-        if st.session_state.crop:
-            st.markdown(f"### 🌾 Selected Crop: {st.session_state.crop}")
-            
-            # Mock recommendations
-            recommendations = [
-                {"name": "Tomato", "yield": "25-35 quintals/hectare", "profit": "₹50,000-₹80,000"},
-                {"name": "Maize", "yield": "20-30 quintals/hectare", "profit": "₹40,000-₹60,000"},
-                {"name": "Ragi", "yield": "8-12 quintals/hectare", "profit": "₹30,000-₹45,000"},
-                {"name": "Okra", "yield": "15-25 quintals/hectare", "profit": "₹35,000-₹55,000"}
-            ]
-            
-            df = pd.DataFrame(recommendations)
-            st.dataframe(df, use_container_width=True)
-            
-            if st.button("📅 Create Farming Plan", use_container_width=True):
-                st.session_state.page = "schedule"
-                st.rerun()
+        # Mock recommendations
+        recommendations = get_mock_crop_recommendations()
+        
+        df = pd.DataFrame(recommendations)
+        st.dataframe(df, use_container_width=True)
+        
+        if st.button("📅 Create Farming Plan", use_container_width=True):
+            st.session_state.page = "schedule"
+            st.rerun()
     
     elif st.session_state.page == "schedule":
         st.markdown('<h1 class="marketing-title">📅 Farming Schedule</h1>', unsafe_allow_html=True)
@@ -275,14 +306,13 @@ def main():
             crop = st.session_state.crop
             area = st.session_state.farming_plan.get('area', 1.0)
             
-            requirements = get_shopping_requirements(crop, area)
+            requirements = get_mock_shopping_requirements(crop, area)
             
             st.markdown('<h2 class="section-header">📋 Purchase Checklist</h2>', unsafe_allow_html=True)
             
-            for category, items in requirements.items():
+            for category, item in requirements.items():
                 st.markdown(f'<h3 class="shopping-item-title">{category.title()}</h3>', unsafe_allow_html=True)
-                for item in items:
-                    st.markdown(f"- {item['name']}: ₹{item['price']}")
+                st.markdown(f"- {item['name']}: ₹{item['price']}")
     
     elif st.session_state.page == "marketing":
         st.markdown('<h1 class="marketing-title">🏪 Marketing & Selling</h1>', unsafe_allow_html=True)
@@ -290,13 +320,7 @@ def main():
         
         if st.session_state.crop:
             # Market prices
-            market_data = {
-                "Tomato": {"min": 20, "max": 35, "avg": 28, "demand": "High"},
-                "Maize": {"min": 18, "max": 25, "avg": 22, "demand": "Medium"},
-                "Ragi": {"min": 25, "max": 40, "avg": 33, "demand": "High"},
-                "Okra": {"min": 30, "max": 45, "avg": 38, "demand": "High"}
-            }
-            
+            market_data = get_mock_market_prices()
             crop_data = market_data.get(st.session_state.crop, {})
             
             if crop_data:
