@@ -14,6 +14,16 @@ DEPLOYMENT_CONFIG = {
     "description": "Advanced AI-powered Agricultural Assistant",
     "author": "KrishiAI Team",
     
+    # Optional Dependencies
+    "optional_dependencies": {
+        "tensorflow": {
+            "required": False,
+            "version": ">=2.10.0",
+            "description": "AI/ML features (land analysis, crop recommendations, profit prediction)",
+            "install_command": "pip install tensorflow>=2.10.0 keras>=2.10.0"
+        }
+    },
+    
     # Server Configuration
     "server": {
         "host": "0.0.0.0",

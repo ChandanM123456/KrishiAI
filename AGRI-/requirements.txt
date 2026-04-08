@@ -5,3 +5,4 @@ scikit-learn>=1.4.0
 Pillow>=9.5.0
 requests>=2.31.0
 python-dotenv>=1.0.0
+# Optional AI dependencies - install with: pip install tensorflow>=2.10.0 keras>=2.10.0
