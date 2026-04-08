@@ -21,7 +21,7 @@ KrishiAI Pro is an advanced AI-powered agricultural assistant that helps farmers
 git clone https://github.com/ChandanM123456/KrishiAI.git
 cd KrishiAI/AGRI-
 
-# Deploy to Streamlit Cloud (uses packages.txt by default)
+# Deploy to Streamlit Cloud (uses requirements.txt by default - TensorFlow-free)
 streamlit deploy
 ```
 
@@ -44,10 +44,10 @@ pip install tensorflow>=2.10.0 keras>=2.10.0
 streamlit deploy
 ```
 
-3. **Requirements File Method:**
+3. **AI Requirements File Method:**
 ```bash
-# Use full requirements file with TensorFlow
-cp requirements-full.txt packages.txt
+# Use AI requirements file with TensorFlow
+cp requirements-ai.txt packages.txt
 streamlit deploy
 ```
 
@@ -59,10 +59,11 @@ streamlit deploy --requirements "tensorflow>=2.10.0 keras>=2.10.0"
 
 ### Requirements Files
 
-- **`packages.txt`**: Core dependencies only (for Streamlit Cloud)
-- **`requirements.txt`**: All dependencies including TensorFlow (for local/full deployment)
+- **`requirements.txt`**: Core dependencies only (TensorFlow-free for Streamlit Cloud)
+- **`requirements-ai.txt`**: Core dependencies + TensorFlow for AI features
+- **`packages.txt`**: Alternative core dependencies (for Streamlit Cloud)
 - **`requirements-cloud.txt`**: Cloud-specific without TensorFlow (alternative)
-- **`requirements-full.txt`**: Complete dependencies with TensorFlow (recommended for Streamlit Cloud)
+- **`requirements-full.txt`**: Complete dependencies with TensorFlow (legacy)
 
 ### TensorFlow Handling
 
