@@ -1742,7 +1742,6 @@ def load_data():
         if csv_path.exists():
             return pd.read_csv(csv_path)
         else:
-            st.warning("Dataset not found. Using default crop recommendations.")
             return pd.DataFrame(columns=['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall', 'label'])
     except Exception as e:
         st.error(f"Error loading dataset: {e}")
