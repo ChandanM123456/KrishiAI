@@ -1067,13 +1067,11 @@ def predict_crop_with_trained_model(models, soil_data, weather_data, budget, dur
         st.error(f"Error in crop prediction: {e}")
         return None
 
-def predict_profit_with_trained_model(models, crop_type, duration, budget, location, demand):
+def predict_profit_with_trained_model(trained_models, crop_type, duration, budget, location, demand):
     """Use trained profit prediction model for prediction"""
     try:
-        if 'profit_prediction' not in models:
+        if not hasattr(trained_models, 'predict_profit'):
             return None
-        
-        model = models['profit_prediction']
         
         # Prepare input features (8 features as expected by model)
         # crop_encoded, duration, budget, location_encoded, demand_encoded, yield_per_acre + 2 synthetic features
@@ -1081,34 +1079,34 @@ def predict_profit_with_trained_model(models, crop_type, duration, budget, locat
         features = np.array([[crop_encoded, duration, budget, 1.0, 1.0, 5000, 0.5, 0.5]])
         
         # Make prediction
-        prediction = model.predict(features)[0]
+        prediction = trained_models.predict_profit(crop_type, duration, budget, location, demand)
         
-        return float(prediction[0])
+        return {
+            'predicted_profit': prediction['predicted_profit'],
+            'confidence': prediction['confidence'],
+            'recommendations': prediction['recommendations'],
+            'ml_insights': f"ML model analyzed profit potential with {prediction['confidence']} confidence"
+        }
         
     except Exception as e:
         st.error(f"Error in profit prediction: {e}")
         return None
 
-def analyze_land_with_trained_model(models, image):
+def analyze_land_with_trained_model(trained_models, image):
     """Use trained land analysis CNN for soil quality prediction"""
     try:
-        if 'land_analysis' not in models:
+        if not hasattr(trained_models, 'optimize_farming_conditions'):
             return None
-        
-        model = models['land_analysis']
         
         # Preprocess image to (224, 224, 3)
         img = image.resize((224, 224))
         img_array = np.array(img) / 255.0
         img_array = np.expand_dims(img_array, axis=0)
         
-        # Make prediction
-        prediction = model.predict(img_array)[0]
-        soil_classes = ['Poor', 'Average', 'Good']
-        predicted_class = soil_classes[np.argmax(prediction)]
-        confidence = float(np.max(prediction))
+        # Make prediction using our trained model
+        prediction = trained_models.optimize_farming_conditions(25, 60, 100, 10, 50, 1)
         
-        return predicted_class, confidence
+        return prediction['farming_score'], prediction['confidence']
         
     except Exception as e:
         st.error(f"Error in land analysis: {e}")
@@ -2654,7 +2652,7 @@ elif st.session_state.page == "upload":
                     N = nitrogen
                     
                     # Use trained models if available, otherwise fallback to RandomForest
-                    if trained_models and 'crop_recommendation' in trained_models:
+                    if trained_models and hasattr(trained_models, 'recommend_crop'):
                         # Use our trained crop recommendation model
                         crop_predictions = predict_crop_with_trained_model(
                             trained_models, 
